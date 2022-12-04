@@ -30,13 +30,9 @@
 (defun rorg-forward-slurp-subtree ()
   "Move the forward subtree to the level same with heading at point."
   (interactive)
-  (org-forward-heading-same-level 1)
-  (org-demote-subtree))
-
-(defun rorg-goto-subtree-end ()
-  "Move the currsor to the end of the `org-mode' heading at point."
-  (org-mark-subtree)
-  (goto-char (region-end)))
+  (save-excursion
+    (org-forward-heading-same-level 1)
+    (org-demote-subtree)))
 
 (provide 'rorg)
 ;;; rorg.el ends here
