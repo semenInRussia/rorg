@@ -7,7 +7,6 @@ Feature: Refactoring for org-mode subtrees
       * Lisps
       ** Elisp
       ** Common Lisp
-      * Racket
       """
     Then I go to beginning of buffer
     And I call "rorg-forward-slurp-subtree"
@@ -17,10 +16,12 @@ Feature: Refactoring for org-mode subtrees
       ** Lisps
       *** Elisp
       *** Common Lisp
-      * Racket
       """
-    And the cursor should be at point "0"
-    Then I go to next line
+    And the cursor should be at point "1"
+    When I go to end of buffer
+    And I press "RET"
+    And I insert "** Racket"
+    Then I go to line "2"
     And I call "rorg-forward-slurp-subtree"
     Then I should see:
       """
@@ -30,4 +31,15 @@ Feature: Refactoring for org-mode subtrees
       *** Common Lisp
       *** Racket
       """
-    And the cursor should be at point "0"
+  Scenario: forward barf
+    When I insert:
+      """
+      * Languages
+      ** Lisps
+      *** Elisp
+      *** Clojure
+      *** Rust
+      """
+    And I go to word "Rust"
+    And I call "rorg-forward-barf-subtree"
+    Then I should not see "*** Rust"

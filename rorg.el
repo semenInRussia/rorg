@@ -27,12 +27,50 @@
 
 (require 'org)
 
+(defgroup rorg nil
+  "Refactoring for `org-mode' headings."
+  :group 'tools)
+
 (defun rorg-forward-slurp-subtree ()
   "Move the forward subtree to the level same with heading at point."
   (interactive)
   (save-excursion
     (org-forward-heading-same-level 1)
     (org-demote-subtree)))
+
+(defun rorg-forward-barf-subtree ()
+  "Promote the last heading of subtree at point."
+  (interactive)
+  (save-excursion
+    (rorg-goto-last-heading-of-subtree)
+    (org-promote-subtree)))
+
+(defun rorg-goto-last-heading-of-subtree ()
+  "Go to the last heading of `org-mode' subtree at the cursor."
+  (rorg-goto-subtree-end)
+  (rorg-forward-heading -1))
+
+(defun rorg-goto-subtree-end ()
+  "Move the currsor to the end of the `org-mode' heading at point."
+  (org-mark-subtree)
+  (goto-char (region-end)))
+
+(defcustom rorg-heading-start-regexp "^\*+"
+  "Regexp indicates the start of a `org-mode' heading."
+  :type 'regexp
+  :group 'rorg)
+
+(defun rorg-forward-heading (&optional n)
+  "Go to the N th forward the `org-mode' heading.
+
+N defaults to 1.  If N is negative, then go to the previous headings"
+  (cond
+   ((not n)
+    (rorg-forward-heading 1))
+   ((> n 0)
+    (search-forward-regexp rorg-heading-start-regexp nil t n))
+   ((< n 0)
+    (search-backward-regexp rorg-heading-start-regexp nil t (- n)))))
 
 (provide 'rorg)
 ;;; rorg.el ends here
