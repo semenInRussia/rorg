@@ -64,13 +64,7 @@
   "Go to the N th forward the `org-mode' heading.
 
 N defaults to 1.  If N is negative, then go to the previous headings"
-  (cond
-   ((not n)
-    (rorg-forward-heading 1))
-   ((> n 0)
-    (search-forward-regexp rorg-heading-start-regexp nil t n))
-   ((< n 0)
-    (search-backward-regexp rorg-heading-start-regexp nil t (- n)))))
+  (search-forward-regexp rorg-heading-start-regexp nil t (or n 1)))
 
 (provide 'rorg)
 ;;; rorg.el ends here
