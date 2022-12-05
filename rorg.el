@@ -53,6 +53,14 @@
     (rorg-goto-last-heading-of-subtree)
     (org-promote-subtree)))
 
+(defun rorg-backward-barf-subtree ()
+  "Change the parent of subtree at point `org-mode' headings to subtree after."
+  (interactive)
+  (save-excursion
+    (org-demote)
+    (org-forward-heading-same-level 1)
+    (org-promote)))
+
 (defun rorg-goto-last-heading-of-subtree ()
   "Go to the last heading of `org-mode' subtree at the cursor."
   (rorg-goto-subtree-end)

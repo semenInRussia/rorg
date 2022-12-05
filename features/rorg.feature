@@ -64,3 +64,29 @@ Feature: Refactoring for org-mode subtrees
       ** Elisp
       """
     And the cursor should be before "Clojure"
+
+  Scenario: backward barf
+    When I insert:
+      """
+      * Things
+      ** Languages
+      ** Racket
+      ** Clojure
+      ** Elisp
+      """
+    And I place the cursor before "Things"
+    And I call "rorg-backward-barf-subtree"
+    Then I should see:
+      """
+      ** Things
+      * Languages
+      ** Racket
+      ** Clojure
+      ** Elisp
+      """
+    And the cursor should be before "Things"
+
+
+    Given
+    When
+    Then
