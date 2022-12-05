@@ -43,3 +43,5 @@ Feature: Refactoring for org-mode subtrees
     And I go to word "Rust"
     And I call "rorg-forward-barf-subtree"
     Then I should not see "*** Rust"
+    And I should see "Rust"
+    And the cursor should be before "Rust"
