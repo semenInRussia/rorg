@@ -45,3 +45,22 @@ Feature: Refactoring for org-mode subtrees
     Then I should not see "*** Rust"
     And I should see "Rust"
     And the cursor should be before "Rust"
+
+  Scenario: backward slurp
+    When I insert:
+      """
+      ** Languages
+      * Clojure
+      ** Racket
+      ** Elisp
+      """
+    And I place the cursor before "Clojure"
+    And I call "rorg-backward-slurp-subtree"
+    Then I should see:
+      """
+      * Languages
+      ** Clojure
+      ** Racket
+      ** Elisp
+      """
+    And the cursor should be before "Clojure"

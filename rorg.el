@@ -38,6 +38,14 @@
     (org-forward-heading-same-level 1)
     (org-demote-subtree)))
 
+(defun rorg-backward-slurp-subtree ()
+  "Change the parent of subtree at point `org-mode' headings to subtree before."
+  (interactive)
+  (save-excursion
+    (org-demote)
+    (org-forward-heading-same-level -1)
+    (org-promote)))
+
 (defun rorg-forward-barf-subtree ()
   "Promote the last heading of subtree at point."
   (interactive)
