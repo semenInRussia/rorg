@@ -86,7 +86,31 @@ Feature: Refactoring for org-mode subtrees
       """
     And the cursor should be before "Things"
 
+  Scenario: splice a org-mode heading with children
+    When I insert:
+      """
+      * Languages
+      ** Racket
+      ** Clojure
+      ** Elisp
+      """
+    And I place the cursor before "Languages"
+    And I call "rorg-splice-subtree"
+    Then I should not see "Languages"
+    And the cursor should be at point "1"
 
-    Given
-    When
-    Then
+  Scenario: splice a org-mode heading without children
+    When I insert:
+      """
+      ** Racket
+      text
+      """
+    And I place the cursor before "Racket"
+    And I call "rorg-splice-subtree"
+    Then I should see:
+      """
+      Racket
+      text
+      """
+    And I should see "text"
+    And the cursor should be before "Racket"

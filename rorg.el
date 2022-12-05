@@ -53,6 +53,25 @@
     (rorg-goto-last-heading-of-subtree)
     (org-promote-subtree)))
 
+(defun rorg-goto-last-heading-of-subtree ()
+  "Go to the last heading of `org-mode' subtree at the cursor."
+  (rorg-goto-subtree-end)
+  (rorg-forward-heading -1))
+
+(defcustom rorg-heading-start-regexp "^\*+"
+  "Regexp indicates the start of a `org-mode' heading."
+  :type 'regexp
+  :group 'rorg)
+
+(defun rorg-forward-heading (&optional n bound)
+  "Go to the N th forward the `org-mode' heading.
+
+N defaults to 1.  If N is negative, then go to the previous headings.  Limit
+search before point BOUND.
+
+Return non-nil if the heading is found, otherwise nil"
+  (search-forward-regexp rorg-heading-start-regexp bound t (or n 1)))
+
 (defun rorg-backward-barf-subtree ()
   "Change the parent of subtree at point `org-mode' headings to subtree after."
   (interactive)
@@ -61,26 +80,40 @@
     (org-forward-heading-same-level 1)
     (org-promote)))
 
-(defun rorg-goto-last-heading-of-subtree ()
-  "Go to the last heading of `org-mode' subtree at the cursor."
-  (rorg-goto-subtree-end)
-  (rorg-forward-heading -1))
+(defun rorg-splice-subtree ()
+  "If subtree hasn't children, remove stars, otherwise remove heading line."
+  (interactive)
+  (save-excursion
+    (rorg-goto-subtree-beginning)
+    (if (rorg-subtree-has-children-p)
+        (rorg--kill-whole-line)
+      (org-toggle-heading))))
+
+(defun rorg-subtree-has-children-p ()
+  "Return non-nil, if a `org-mode' subtree at point has children."
+  (save-excursion
+    (rorg-goto-subtree-beginning)
+    (end-of-line)
+    ;; the following line should return t, when the heading is found
+    (rorg-forward-heading 1 (rorg-subtree-end-point))))
+
+(defun rorg-subtree-end-point ()
+  "Return point at the end of subtree at point."
+  (save-excursion (rorg-goto-subtree-end) (point)))
+
+(defun rorg--kill-whole-line ()
+  "Kill whole line at point."
+  (delete-region (point-at-bol) (point-at-eol)))
+
+(defun rorg-goto-subtree-beginning ()
+  "Move the currsor to the beginning of the `org-mode' heading at point."
+  (org-mark-subtree)
+  (goto-char (region-beginning)))
 
 (defun rorg-goto-subtree-end ()
   "Move the currsor to the end of the `org-mode' heading at point."
   (org-mark-subtree)
   (goto-char (region-end)))
-
-(defcustom rorg-heading-start-regexp "^\*+"
-  "Regexp indicates the start of a `org-mode' heading."
-  :type 'regexp
-  :group 'rorg)
-
-(defun rorg-forward-heading (&optional n)
-  "Go to the N th forward the `org-mode' heading.
-
-N defaults to 1.  If N is negative, then go to the previous headings"
-  (search-forward-regexp rorg-heading-start-regexp nil t (or n 1)))
 
 (provide 'rorg)
 ;;; rorg.el ends here
