@@ -114,3 +114,21 @@ Feature: Refactoring for org-mode subtrees
       """
     And I should see "text"
     And the cursor should be before "Racket"
+  Scenario: wrap the region with root heading
+    When I insert:
+      """
+      *** Racket
+      *** Clojure
+      *** Elisp
+      """
+    And I go to beginning of buffer
+    And I mark whole buffer
+    And I call "rorg-wrap-region"
+    And I insert "Lisps"
+    Then I should see:
+      """
+      ** Lisps
+      *** Racket
+      *** Clojure
+      *** Elisp
+      """

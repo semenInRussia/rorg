@@ -31,6 +31,52 @@
   "Refactoring for `org-mode' headings."
   :group 'tools)
 
+(defun rorg-wrap-region-or-current-heading ()
+  "If the region is active, `rorg-wrap-region', else before it mark heading."
+  (interactive)
+  (unless (use-region-p) (org-mark-subtree))
+  (rorg-wrap-region (region-beginning) (region-end)))
+
+(defun rorg-wrap-region (beg end)
+  "Add the root heading for `org-mode' headings in region, go to the root.
+
+BEG and END defines the region"
+  (interactive "r")
+  (goto-char beg)
+  (insert "\n")
+  (forward-char -1)
+  (rorg--insert-heading-prefix-with-level
+   (1- (or (rorg--heading-level-in-region beg end) 2)))
+  (end-of-line))
+
+(defun rorg--insert-heading-prefix-with-level (level)
+  "Insert prefix of a `org-mode' heading with LEVEL."
+  (dotimes (_ level) (insert ?*))
+  (insert ? ))
+
+(defun rorg--heading-level-in-region (beg end)
+  "Get non-nil, if a `org-mode' heading placed in region between BEG and END."
+  (save-excursion
+    (goto-char beg)
+    (rorg--forward-heading 1 end)
+    (rorg--heading-level)))
+
+(defun rorg--heading-level ()
+  "Return level of a `org-mode' heading at point (depends on amount of stars).
+
+The cursor should be placed at the same line what the `org-mode' heading line,
+otherwise return nil."
+  (let ((level 0)
+        (eol (point-at-eol)))
+    (save-excursion
+      (beginning-of-line)
+      (while (and
+              (= (char-after) ?*)
+              (not (= (point) eol)))
+        (setq level (1+ level))
+        (forward-char 1))
+      (and (not (zerop level)) level))))
+
 (defun rorg-forward-slurp-subtree ()
   "Move the forward subtree to the level same with heading at point."
   (interactive)
