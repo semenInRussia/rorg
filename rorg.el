@@ -34,20 +34,32 @@
 (defun rorg-wrap-region-or-current-heading ()
   "If the region is active, `rorg-wrap-region', else before it mark heading."
   (interactive)
-  (unless (use-region-p) (org-mark-subtree))
-  (rorg-wrap-region (region-beginning) (region-end)))
+  (cond
+   ((org-before-first-heading-p)
+    (newline)
+    (forward-char -1)
+    (rorg--insert-heading-prefix-with-level 1))
+   (t
+    (unless (use-region-p) (org-mark-subtree))
+    (rorg-wrap-region (region-beginning) (region-end)))))
 
 (defun rorg-wrap-region (beg end)
   "Add the root heading for `org-mode' headings in region, go to the root.
 
 BEG and END defines the region"
   (interactive "r")
-  (goto-char beg)
-  (insert "\n")
-  (forward-char -1)
-  (rorg--insert-heading-prefix-with-level
-   (1- (or (rorg--heading-level-in-region beg end) 2)))
-  (end-of-line))
+  (let ((level (rorg--heading-level-in-region beg end)))
+    (goto-char beg)
+    (insert "\n")
+    (forward-char -1)
+    (cond
+     ((equal level nil)
+      (org-insert-heading))
+     ((= level 1)
+      (org-map-region 'org-demote beg end)
+      (rorg--insert-heading-prefix-with-level 1))
+     (t (rorg--insert-heading-prefix-with-level (1- level))))
+    (end-of-line)))
 
 (defun rorg--insert-heading-prefix-with-level (level)
   "Insert prefix of a `org-mode' heading with LEVEL."
