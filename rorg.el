@@ -63,8 +63,7 @@ BEG and END defines the region"
 
 (defun rorg--insert-heading-prefix-with-level (level)
   "Insert prefix of a `org-mode' heading with LEVEL."
-  (dotimes (_ level) (insert ?*))
-  (insert ? ))
+  (insert (make-string level ?*) ? ))
 
 (defun rorg--heading-level-in-region (beg end)
   "Get non-nil, if a `org-mode' heading placed in region between BEG and END."
