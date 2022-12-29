@@ -1,10 +1,11 @@
-;;; rorg.el --- Refactoring for `org-mode' headings -*- lexical-binding: t; -*-
+;;; rorg.el --- Org Mode headings refactoring  -*- lexical-binding: t; -*
 
 ;; Copyright (C) 2022 semenInRussia
 
 ;; Author: semenInRussia <hrams205@gmail.com>
 ;; Version: 0.0.1
 ;; Package-Requires: ((emacs "24.3"))
+;; Homepage: https://github.com/semenInRussia/rorg
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -69,6 +70,7 @@ BEG and END defines the region"
   "Return level of first heading in region between BEG and END."
   (save-excursion
     (goto-char beg)
+    ;; here `end' is limit to search
     (rorg--forward-heading 1 end)
     (rorg--heading-level)))
 
