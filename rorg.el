@@ -66,7 +66,7 @@ BEG and END defines the region"
   (insert (make-string level ?*) ? ))
 
 (defun rorg--heading-level-in-region (beg end)
-  "Get non-nil, if a `org-mode' heading placed in region between BEG and END."
+  "Return level of first heading in region between BEG and END."
   (save-excursion
     (goto-char beg)
     (rorg--forward-heading 1 end)
