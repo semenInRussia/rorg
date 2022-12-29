@@ -78,16 +78,11 @@ BEG and END defines the region"
 
 The cursor should be placed at the same line what the `org-mode' heading line,
 otherwise return nil."
-  (let ((level 0)
-        (eol (point-at-eol)))
-    (save-excursion
-      (beginning-of-line)
-      (while (and
-              (= (char-after) ?*)
-              (not (= (point) eol)))
-        (setq level (1+ level))
-        (forward-char 1))
-      (and (not (zerop level)) level))))
+  (save-excursion
+    (beginning-of-line)
+    (and (= (char-after) ?*)
+         ;; return traveled distance
+         (skip-chars-forward "*"))))
 
 (defun rorg-forward-slurp-subtree ()
   "Move the forward subtree to the level same with heading at point."
