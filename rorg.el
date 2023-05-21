@@ -117,7 +117,7 @@ otherwise return nil."
   (rorg--goto-subtree-end)
   (rorg--forward-heading -1))
 
-(defcustom rorg-heading-start-regexp "^\*+"
+(defcustom rorg-heading-start-regexp "^\\*+"
   "Regexp indicates the start of a `org-mode' heading."
   :type 'regexp
   :group 'rorg)
