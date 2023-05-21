@@ -32,6 +32,7 @@
   "Refactoring for `org-mode' headings."
   :group 'tools)
 
+;;;###autoload
 (defun rorg-wrap-region-or-current-heading ()
   "If the region is active, `rorg-wrap-region', else before it mark heading."
   (interactive)
@@ -44,6 +45,7 @@
     (unless (use-region-p) (org-mark-subtree))
     (rorg-wrap-region (region-beginning) (region-end)))))
 
+;;;###autoload
 (defun rorg-wrap-region (beg end)
   "Add the root heading for `org-mode' headings in region, go to the root.
 
@@ -85,6 +87,7 @@ otherwise return nil."
          ;; return traveled distance
          (skip-chars-forward "*"))))
 
+;;;###autoload
 (defun rorg-forward-slurp-subtree ()
   "Move the forward subtree to the level same with heading at point."
   (interactive)
@@ -92,6 +95,7 @@ otherwise return nil."
     (org-forward-heading-same-level 1)
     (org-demote-subtree)))
 
+;;;###autoload
 (defun rorg-backward-slurp-subtree ()
   "Change the parent of subtree at point `org-mode' headings to subtree before."
   (interactive)
@@ -100,6 +104,7 @@ otherwise return nil."
     (org-forward-heading-same-level -1)
     (org-promote)))
 
+;;;###autoload
 (defun rorg-forward-barf-subtree ()
   "Promote the last heading of subtree at point."
   (interactive)
@@ -126,6 +131,7 @@ search before point BOUND.
 Return non-nil if the heading is found, otherwise nil"
   (search-forward-regexp rorg-heading-start-regexp bound t (or n 1)))
 
+;;;###autoload
 (defun rorg-backward-barf-subtree ()
   "Change the parent of subtree at point `org-mode' headings to subtree after."
   (interactive)
